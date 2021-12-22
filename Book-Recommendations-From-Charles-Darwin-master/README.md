@@ -1,0 +1,3 @@
+# Book Recommendations From Charles Darwin
+
+Charles Darwin is one of the few universal figures of science. His most renowned work is without a doubt his "On the Origin of Species" published in 1859 which introduced the concept of natural selection. But Darwin wrote many other books on a wide range of topics, including geology, plants or his personal life. This project investigated how closely related his books are to each other. The data analysis is documented in [notebook.ipynb)](https://github.com/iDataist/Book-Recommendations-From-Charles-Darwin/blob/master/notebook.ipynb). The raw data files are also stored in the repository.

@@ -1,0 +1,39 @@
+
+Kaggle competitions process¶
+Explore train data
+Explore test data
+Train a simple model
+Prepare a submission
+Train XGBoost models
+aqui começo do zero, a única coisa uqe aproveito de cima é a importação do csv
+Explore overfitting XGBoost
+Dive into the Competition
+Define a competition metric
+EDA statistics
+EDA plots I
+EDA plots II
+K-fold cross-validation
+Stratified K-fold
+Time K-fold
+Overall validation score
+Overall validation MSE: 1006.38784
+  Feature Engineering
+Arithmetical features
+Date features
+Label encoding
+One-Hot encoding
+Mean target encoding
+K-fold cross-validation
+Beyond binary classification
+Find missing data
+Impute missing data
+Modeling
+  Replicate validation score
+Baseline based on the date
+Baseline based on the gradient boosting
+Grid search
+2D grid search
+Model blending
+Model stacking I
+Model stacking II
+Testing Kaggle forum ideas
