@@ -1,0 +1,702 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.13.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+```{python}
+
+
+## Make a histogram // 8 exercise
+
+# Plot the histogram
+plt.hist(agecon, bins=20)
+
+# Label the axes
+plt.xlabel('Age at conception')
+plt.ylabel('Number of pregnancies')
+
+# Show the figure
+plt.show()
+
+
+## Adapted to make an unfilled histogram by setting the parameter histtype to be 'step'.
+# Plot the histogram
+plt.hist(agecon, bins=20, histtype='step')
+
+# Label the axes
+plt.xlabel('Age at conception')
+plt.ylabel('Number of pregnancies')
+
+# Show the figure
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Compute birth weight
+
+# Compute total birth weight
+birth_weight = pounds + ounces / 16.0
+
+# Create a Boolean Series for preterm babies
+preterm = sample['prglngth'] < 37
+
+# Select the weights of full term babies
+full_term_weight = birth_weight[~preterm]
+
+# Compute the mean weight of full term babies
+print(full_term_weight.mean())
+```
+
+```{python}
+
+```
+
+```{python}
+## Filter
+
+# Filter preterm babies
+preterm = sample['prglngth'] < 37
+
+# Filter single births
+single = sample['nbrnaliv'] == 1
+
+# Compute birth weight for single full-term babies
+single_full_term_weight = birth_weight[~preterm & (single) ]
+print('Single full-term mean:', single_full_term_weight.mean())
+
+# Compute birth weight for multiple full-term babies
+mult_full_term_weight = birth_weight[(~preterm) & (~single)]
+print('Multiple full-term mean:', mult_full_term_weight.mean())
+
+# <script.py> output:
+#     Single full-term mean: 7.40297320308299
+#     Multiple full-term mean: 5.784722222222222
+```
+
+```{python}
+
+```
+
+```{python}
+### MODULE 2
+```
+
+```{python}
+Pmf(gss['educ']).cumsum()
+```
+
+```{python}
+## Make a PMF
+
+## PMF = Probability Mass Function
+
+# Compute the PMF for year
+pmf_year = Pmf(gss['year'], normalize=False)
+
+# Print the result
+print(pmf_year)
+```
+
+```{python}
+
+```
+
+```{python}
+## Plot a PMF
+
+#Select the age column
+age = gss['age']
+
+# Make a PMF of age
+pmf_age = Pmf(age)
+
+# Plot the PMF
+pmf_age.bar()
+
+# Label the axes
+plt.xlabel('Age')
+plt.ylabel('PMF')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Make a CDF
+
+# Select the age column
+age = gss['age']
+
+# Compute the CDF of age
+cdf_age = Cdf(age)
+
+# Calculate the CDF of 30
+print(cdf_age[30])
+```
+
+```{python}
+
+```
+
+```{python}
+## Compute IQR
+
+# Calculate the 75th percentile 
+percentile_75th = cdf_income.inverse(0.75)
+
+# Calculate the 25th percentile
+percentile_25th = cdf_income.inverse(0.25)
+
+# Calculate the interquartile range
+iqr = percentile_75th - percentile_25th
+
+# Print the interquartile range
+print(iqr)
+```
+
+```{python}
+## Plot a CDF
+
+# Select realinc
+income = gss['realinc']
+
+# Make the CDF
+cdf_income = Cdf(income)
+
+# Plot it
+cdf_income.plot()
+
+# Label the axes
+plt.xlabel('Income (1986 USD)')
+plt.ylabel('CDF')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Extract education levels
+
+# Select educ
+educ = gss['educ']
+
+# Postgraduate education
+post = educ > 16
+
+# Bachelor's degree
+bach = ~post & (educ > 14)
+
+# Associate degree
+assc = ~bach & educ > 12
+
+# High school (12 or fewer years of education)
+high = educ <= 12
+print(high.mean())
+```
+
+```{python}
+
+```
+
+```{python}
+## Plot income CDFs
+
+income = gss['realinc']
+
+# Plot the CDFs
+Cdf(income[high]).plot(label='High school')
+Cdf(income[assc]).plot(label='Associate')
+Cdf(income[bach]).plot(label='Bachelor')
+Cdf(income[post]).plot(label='Postgraduate')
+
+# Label the axes
+plt.xlabel('Income (1986 USD)')
+plt.ylabel('CDF')
+plt.legend()
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Distribution of income
+
+# Extract realinc and compute its log
+income = gss['realinc']
+log_income = np.log10(income)
+
+# Compute mean and standard deviation
+mean = log_income.mean()
+std = log_income.std()
+print(mean, std)
+
+# Make a norm object
+from scipy.stats import norm
+dist = norm(log_income)
+```
+
+```{python}
+
+```
+
+```{python}
+## Comparing CDFs
+
+# Evaluate the normal CDF
+xs = np.linspace(2, 5.5)
+ys = dist.cdf(xs)
+
+# Plot the model CDF
+plt.clf()
+plt.plot(xs, ys, color='gray')
+
+# Plot the data CDF
+Cdf(log_income).plot()
+    
+# Label the axes
+plt.xlabel('log10 of realinc')
+plt.ylabel('CDF')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Comparing PDFs
+
+# Evaluate the normal PDF
+xs = np.linspace(2, 5.5)
+ys = dist.pdf(xs)
+
+# Plot the model PDF
+plt.clf()
+plt.plot(xs, ys, color='gray')
+
+# Plot the data KDE
+sns.kdeplot(log_income)
+
+# Label the axes
+plt.xlabel('log10 of realinc')
+plt.ylabel('PDF')
+plt.show()
+
+# seen several ways to vizualize and compare distributions: PMFs, CDFs, and KDE plots. 
+```
+
+```{python}
+
+```
+
+```{python}
+## MODULE 3
+```
+
+```{python}
+# PMF of age
+
+# Select the first 1000 respondents
+brfss = brfss[:1000]
+
+# Extract age and weight
+age = brfss['AGE']
+weight = brfss['WTKG3']
+
+# Make a scatter plot
+plt.plot(age, weight, fmt='o', alpha=.1)
+
+plt.xlabel('Age in years')
+plt.ylabel('Weight in kg')
+
+plt.show()
+
+
+```
+
+```{python}
+## Scatter plot
+
+# Select the first 1000 respondents
+brfss = brfss[:1000]
+
+# Extract age and weight
+age = brfss['AGE']
+weight = brfss['WTKG3']
+
+# Make a scatter plot
+plt.plot(age, weight, fmt='o', alpha=.1)
+
+plt.xlabel('Age in years')
+plt.ylabel('Weight in kg')
+
+plt.show()
+```
+
+```{python}
+## Jittering
+
+# Select the first 1000 respondents
+brfss = brfss[:1000]
+
+# Add jittering to age
+age = brfss['AGE'] + np.random.normal(0, 2.5, size=len(brfss))
+# Extract weight
+weight = brfss['WTKG3']
+
+# Make a scatter plot
+plt.plot(age, weight, 'o', alpha=.2, markersize=5)
+
+plt.xlabel('Age in years')
+plt.ylabel('Weight in kg')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Height and weight
+
+# Drop rows with missing data
+data = brfss.dropna(subset=['_HTMG10', 'WTKG3'])
+
+# Make a box plot
+sns.boxplot('_HTMG10', 'WTKG3', data=data, whis=10)
+
+# Plot the y-axis on a log scale
+plt.yscale('log')
+
+# Remove unneded lines and label axes
+sns.despine(left=True, bottom=True)
+plt.xlabel('Height in cm')
+plt.ylabel('Weight in kg')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Distribution of income
+
+# Extract income
+income = brfss['INCOME2']
+
+# Plot the PMF
+Pmf(income).bar()
+
+# Label the axes
+plt.xlabel('Income level')
+plt.ylabel('PMF')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Income and height
+
+# Drop rows with missing data
+data = brfss.dropna(subset=['INCOME2', 'HTM4'])
+
+# Make a violin plot
+sns.violinplot('INCOME2','HTM4',  data=data, inner=None)
+
+# Remove unneded lines and label axes
+sns.despine(left=True, bottom=True)
+plt.xlabel('Income level')
+plt.ylabel('Height in cm')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Computing correlations
+
+# Select columns
+columns = ['AGE', 'INCOME2', '_VEGESU1']
+subset = brfss[columns]
+
+# Compute the correlation matrix
+print(subset.corr())
+```
+
+```{python}
+
+```
+
+```{python}
+## Income and vegetables
+
+from scipy.stats import linregress
+
+# Extract the variables
+subset = brfss.dropna(subset=['INCOME2', '_VEGESU1'])
+xs = subset['INCOME2']
+ys = subset['_VEGESU1']
+
+# Compute the linear regression
+res = linregress(xs, ys)
+print(res)
+```
+
+```{python}
+
+```
+
+```{python}
+## Fit a line
+
+# Plot the scatter plot
+plt.clf()
+x_jitter = xs + np.random.normal(0, 0.15, len(xs))
+plt.plot(x_jitter, ys, 'o', alpha=0.2)
+
+# Plot the line of best fit
+fx = np.array([xs.min(), xs.max()])
+fy = res.intercept + res.slope * fx
+plt.plot(fx, fy, '-', alpha=0.7)
+
+plt.xlabel('Income code')
+plt.ylabel('Vegetable servings per day')
+plt.ylim([0, 6])
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## MODULE 4
+```
+
+```{python}
+
+# Using StatsModels
+
+from scipy.stats import linregress
+import statsmodels.formula.api as smf
+
+# Run regression with linregress
+subset = brfss.dropna(subset=['INCOME2', '_VEGESU1'])
+xs = subset['INCOME2']
+ys = subset['_VEGESU1']
+res = linregress(xs, ys)
+print(res)
+
+# Run regression with StatsModels
+results = smf.ols('INCOME2 ~ _VEGESU1', data= brfss).fit()
+print(results.params)
+```
+
+```{python}
+
+```
+
+```{python}
+## Plot income and edcuation
+
+# Group by educ
+grouped = gss.groupby('educ')
+
+# Compute mean income in each group
+mean_income_by_educ = grouped['realinc'].mean()
+
+# Plot mean income as a scatter plot
+plt.plot(mean_income_by_educ, 'o', alpha=.5)
+
+# Label the axes
+plt.xlabel('Education (years)')
+plt.ylabel('Income (1986 $)')
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+## Non-linear model of education
+
+import statsmodels.formula.api as smf
+
+# Add a new column with educ squared
+gss['educ2'] = gss['educ']**2
+
+# Run a regression model with educ, educ2, age, and age2
+results = smf.ols('realinc ~ educ + educ2 + age + age2', data=gss).fit()
+
+# Print the estimated parameters
+print(results.params)
+```
+
+```{python}
+
+```
+
+```{python}
+## Making predictio
+
+# Run a regression model with educ, educ2, age, and age2
+results = smf.ols('realinc ~ educ + educ2 + age + age2', data=gss).fit()
+
+# Make the DataFrame
+df = pd.DataFrame()
+df['educ'] = np.linspace(0,20)
+df['age'] = 30
+df['educ2'] = df['educ']**2
+df['age2'] = df['age']**2
+
+# Generate and plot the predictions
+pred = results.predict(df)
+print(pred.head())
+```
+
+```{python}
+# Visualizing predictions
+
+# Plot mean income in each age group
+plt.clf()
+grouped = gss.groupby('educ')
+mean_income_by_educ = grouped['realinc'].mean()
+plt.plot(mean_income_by_educ, 'o', alpha=0.5)
+
+# Plot the predictions
+pred = results.predict(df)
+plt.plot(df['educ'], pred, label='Age 30')
+
+# Label axes
+plt.xlabel('Education (years)')
+plt.ylabel('Income (1986 $)')
+plt.legend()
+plt.show()
+```
+
+```{python}
+## Predicting a binary variable
+
+# Recode grass
+gss['grass'].replace(2, 0, inplace=True)
+
+# Run logistic regression
+results = smf.logit('grass ~ age + age2 + educ + educ2 + C(sex)', data=gss).fit()
+results.params
+
+# Make a DataFrame with a range of ages
+df = pd.DataFrame()
+df['age'] = np.linspace(18, 89)
+df['age2'] = df['age']**2
+
+# Set the education level to 12
+df['educ'] = 12
+df['educ2'] = df['educ']**2
+
+# Generate predictions for men and women
+df['sex'] = 1
+pred1 = results.predict(df)
+
+df['sex'] = 2
+pred2 = results.predict(df)
+
+plt.clf()
+grouped = gss.groupby('age')
+favor_by_age = grouped['grass'].mean()
+plt.plot(favor_by_age, 'o', alpha=0.5)
+
+plt.plot(df['age'], pred1, label='Male')
+plt.plot(df['age'], pred2, label='Female')
+
+plt.xlabel('Age')
+plt.ylabel('Probability of favoring legalization')
+plt.legend()
+plt.show()
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
