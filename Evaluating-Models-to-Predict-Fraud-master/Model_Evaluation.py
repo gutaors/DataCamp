@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.13.0
+#       jupytext_version: 1.13.8
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -29,6 +29,10 @@ def answer_one():
     df = pd.read_csv('fraud_data.csv')    
     return len(df[df['Class'] == 1])/len(df)
 answer_one()
+
+# +
+#df = pd.read_csv('fraud_data.csv')
+#df.head()
 
 # +
 from sklearn.model_selection import train_test_split

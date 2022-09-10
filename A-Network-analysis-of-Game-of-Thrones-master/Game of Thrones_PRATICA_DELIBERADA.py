@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -7,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.13.0
+#       jupytext_version: 1.13.8
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -19,6 +18,11 @@
 # <p>If you haven't heard of <em>Game of Thrones</em>, then you must be really good at hiding. Game of Thrones is the hugely popular television series by HBO based on the (also) hugely popular book series <em>A Song of Ice and Fire</em> by George R.R. Martin. In this notebook, we will analyze the co-occurrence network of the characters in the  Game of Thrones books. Here, two characters are considered to co-occur if their names appear in the vicinity of 15 words from one another in the books. </p>
 # <p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_76/img/got_network.jpeg" style="width: 550px"></p>
 # <p>This dataset constitutes a network and is given as a text file describing the <em>edges</em> between characters, with some attributes attached to each edge. Let's start by loading in the data for the first book <em>A Game of Thrones</em> and inspect it.</p>
+# -
+
+# Neste caderno, analisaremos a rede de coocorrência dos personagens dos livros de Game of Thrones. Aqui, dois personagens são considerados coocorrentes se seus nomes aparecerem nas proximidades de 15 palavras um do outro nos livros. </p>
+# <p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_76/img/got_network.jpeg" style="width: 550px"></p>
+# <p>Este conjunto de dados constitui uma rede e é fornecido como um arquivo de texto que descreve as <em>bordas</em> entre os caracteres, com alguns atributos anexados a cada borda. Vamos começar carregando os dados do primeiro livro <em>A Guerra dos Tronos</em> e inspecioná-lo.</p>
 
 # + dc={"key": "3"} tags=["sample_code"]
 import pandas as pd
@@ -43,23 +47,44 @@ G_book1 = nx.Graph()
 # + dc={"key": "17"} deletable=false editable=false run_control={"frozen": true} tags=["context"]
 # ## 3. Populate the network with the DataFrame
 # <p>Currently, the graph object <code>G_book1</code> is empty. Let's now populate it with the edges from <code>book1</code>. And while we're at it, let's load in the rest of the books too!</p>
+# -
+
+book1.head()
+# Faça um for iterrows para iterar no book1, linha a linha
+#for i, row in book1.iterrows():
+#    G_book1.add_edge(row.Source, row.Target, weight = row.weight)
+#    print("source",row.Source, "target",row.Target,"weight", row.weight)
 
 # + dc={"key": "17"} tags=["sample_code"]
+
+
 # Iterating through the DataFrame to add edges
+# itera no DataFrame e acrescenta as linhas ligando os personagens source e target
 for i, row in book1.iterrows():
     G_book1.add_edge(row.Source, row.Target, weight = row.weight)
 
 # Creating a list of networks for all the books
+# Cria lista de redes para todos livros
 #books é um objeto graph
 books = [G_book1]
 #vamos ler o csv de cada livro em loop
 book_fnames = ['datasets/book2.csv', 'datasets/book3.csv', 'datasets/book4.csv', 'datasets/book5.csv']
 for book_fname in book_fnames:
     book = pd.read_csv(book_fname)
+    #Cria G_book, ou Grafo de livro
     G_book = nx.Graph()
+    # percorre dataframe de cada livro, linha a linha
     for i, row in book.iterrows():
+        #acrescenta uma linha (edge) no Grafo de Livro com personagens origem e destino e peso da ligação deles
         G_book.add_edge(row.Source, row.Target, weight = row.weight)
+    #faz append no grafo books, este grafo inicialmente tem o G_Book1, daí vai ganhando os grafos dos outros livros
+    #note que isto cria uma lista books[0], books[1] até 4 que seria o quinto livro
     books.append(G_book)
+# -
+
+book_fnames = ['datasets/book2.csv', 'datasets/book3.csv', 'datasets/book4.csv', 'datasets/book5.csv']
+for book_fname in book_fnames:
+    print(book_fname)
 
 # +
 # vamos vizualizar oa cinco livros que estao em 5 csvs com mesma estrutura
@@ -102,9 +127,11 @@ print(sorted_deg_cen_book5)
 # %matplotlib inline
 
 # Creating a list of degree centrality of all the books
+# percorre todos os livros e pega a centralidade de cada um, joga tudo em uma lista chamada evol
 evol = [nx.degree_centrality(book) for book in books]
  
 # Creating a DataFrame from the list of degree centralities in all the books
+# pega a lista evol e joga em um dataframe degree_evol_df
 degree_evol_df = pd.DataFrame.from_records(evol)
 
 # Plotting the degree centrality evolution of Eddard-Stark, Tyrion-Lannister and Jon-Snow
@@ -186,5 +213,11 @@ p_rank, b_cent, d_cent = cor.idxmax(axis = 1)
 # Printing out the top character accoding to the three measures
 print(p_rank, b_cent, d_cent)
 # -
+
+
+
+
+
+
 
 

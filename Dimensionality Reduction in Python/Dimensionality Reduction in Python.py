@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.13.0
+#       jupytext_version: 1.13.8
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -193,8 +193,8 @@ print("The reduced dataframe has {} columns.".format(reduced_df.shape[1]))
 
 # <script.py> output:
 #    The reduced dataframe has 88 columns.
+# -
 
-# +
 ## Nuclear energy and pool drownings
 
 
